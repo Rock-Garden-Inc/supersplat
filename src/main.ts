@@ -7,6 +7,7 @@ import { EditHistory } from './edit-history';
 import { registerEditorEvents } from './editor';
 import { Events } from './events';
 import { initFileHandler } from './file-handler';
+import { initGigaScapeIntegration } from './gigascape-integration';
 import { registerIframeApi } from './iframe-api';
 import { registerPlySequenceEvents } from './ply-sequence';
 import { registerPublishEvents } from './publish';
@@ -241,6 +242,9 @@ const main = async () => {
     registerDocEvents(scene, events);
     registerRenderEvents(scene, events);
     initFileHandler(scene, events, editorUI.appContainer.dom);
+
+    // Initialize GigaScape integration (adds "Save to GigaScape" when gsConfig is present)
+    initGigaScapeIntegration(events, scene);
 
     // load async models
     scene.start();

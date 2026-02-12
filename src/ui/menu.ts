@@ -1,6 +1,7 @@
 import { Container, Element, Label } from '@playcanvas/pcui';
 
 import { Events } from '../events';
+import { isGigaScapeMode } from '../gigascape-integration';
 import { recentFiles } from '../recent-files';
 import { ShortcutManager } from '../shortcut-manager';
 import { localize } from './localization';
@@ -147,7 +148,8 @@ class Menu extends Container {
 
         const openRecentMenuPanel = new MenuPanel([]);
 
-        const fileMenuPanel = new MenuPanel([{
+        // Build file menu items — conditionally include "Save to GigaScape"
+        const fileMenuItems: MenuItem[] = [{
             text: localize('menu.file.new'),
             icon: createSvg(sceneNew),
             isEnabled: () => !events.invoke('scene.empty'),
@@ -202,7 +204,22 @@ class Menu extends Container {
             icon: createSvg(scenePublish),
             isEnabled: () => !events.invoke('scene.empty'),
             onSelect: async () => await events.invoke('show.publishSettingsDialog')
-        }]);
+        }];
+
+        // Add "Save to GigaScape" only when launched from GigaScape
+        if (isGigaScapeMode()) {
+            fileMenuItems.push({
+                // separator
+            });
+            fileMenuItems.push({
+                text: 'Save to GigaScape',
+                icon: createSvg(sceneSave),
+                isEnabled: () => !events.invoke('scene.empty'),
+                onSelect: () => events.invoke('gigascape:save')
+            });
+        }
+
+        const fileMenuPanel = new MenuPanel(fileMenuItems);
 
         const selectionMenuPanel = new MenuPanel([{
             text: localize('menu.select.all'),
