@@ -119,7 +119,7 @@ const uploadToGcs = async (uploadUrl: string, data: Uint8Array): Promise<void> =
         headers: {
             'Content-Type': 'application/octet-stream'
         },
-        body: data
+        body: new Blob([data], { type: 'application/octet-stream' })
     });
 
     if (!res.ok) {
