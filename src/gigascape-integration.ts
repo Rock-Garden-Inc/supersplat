@@ -53,10 +53,12 @@ const parseGsConfig = (): GsConfig | null => {
 };
 
 /**
- * Check if GigaScape integration is active
+ * Check if GigaScape integration is active.
+ * Checks URL directly so it works before initGigaScapeIntegration() is called
+ * (the menu is constructed before init runs).
  */
 const isGigaScapeMode = (): boolean => {
-    return gsConfig !== null;
+    return new URLSearchParams(window.location.search).has('gsConfig');
 };
 
 /**
